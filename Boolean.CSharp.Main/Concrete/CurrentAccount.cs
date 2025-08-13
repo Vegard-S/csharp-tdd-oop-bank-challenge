@@ -26,6 +26,7 @@ namespace Boolean.CSharp.Main.Concrete
             {
                 Payment payment = new Payment(0, ammount);
                 _transactionHistory.Add(payment);
+                payment.Balance = CalculateBalance();
                 return true;
             }
             else if (CalculateBalance() + _overdraft > ammount && _overdraftAllowed)

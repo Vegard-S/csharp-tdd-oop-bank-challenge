@@ -42,6 +42,8 @@ namespace Boolean.CSharp.Test
             //arrange
             SavingsAccount account = new SavingsAccount(Branches.Oslo);
             account.DepositFunds(1000m);
+            account.DepositFunds(500m);
+            account.WithdrawFunds(1000m);
             
             //act
             string result = account.Generatebankstatement();

@@ -18,20 +18,22 @@ namespace Boolean.CSharp.Main.Abstract
         private protected List<Payment> _transactionHistory = new List<Payment>();
 
         
+        
         private protected Branches _branches { get; set; }
 
         
+
         public string Generatebankstatement()
         {
             StringBuilder stringbuilder = new StringBuilder();
             stringbuilder.Append(string.Format("{0,10} || {1,10} || {2,10} || {3,10} \n", "Date", "Credit", "Debit", "Balance"));
             foreach (Payment payment in _transactionHistory.OrderByDescending(t => t.Date))
             {
-                stringbuilder.Append(string.Format("{0,10} || {1,10} || {2,10} || {3,10} ",
+                stringbuilder.Append(string.Format("{0,10} || {1,10} || {2,10} || {3,10} \n",
                         payment.Date.ToShortDateString(),
                         payment.Credit,
                         payment.Debit,
-                        CalculateBalance())
+                        payment.Balance)
                         );
             };
             string result = stringbuilder.ToString();
@@ -43,6 +45,7 @@ namespace Boolean.CSharp.Main.Abstract
             
             Payment payment = new Payment(ammount, 0);
             _transactionHistory.Add(payment);
+            payment.Balance = CalculateBalance();
 
             if (payment.Credit == ammount)
             {
@@ -60,6 +63,7 @@ namespace Boolean.CSharp.Main.Abstract
             {
                 Payment payment = new Payment(0, ammount);
                 _transactionHistory.Add(payment);
+                payment.Balance = CalculateBalance();
                 return true;
             }
             else
