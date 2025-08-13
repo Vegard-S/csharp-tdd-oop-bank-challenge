@@ -1,4 +1,5 @@
 ﻿using Boolean.CSharp.Main.Abstract;
+using Boolean.CSharp.Main.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,12 @@ namespace Boolean.CSharp.Main.Concrete
 {
     public class SavingsAccount : Accounts
     {
+
+        public SavingsAccount(Branches bransh)
+        {
+            _branches = bransh;
+            
+            
+        }
     }
 }

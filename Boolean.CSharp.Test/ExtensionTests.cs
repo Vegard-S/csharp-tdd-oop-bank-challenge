@@ -18,8 +18,7 @@ namespace Boolean.CSharp.Test
         public void CalculateBalance()
         {
             //arrange
-            SavingsAccount account = new SavingsAccount();
-            account.CreateAccount(Branches.Oslo);
+            CurrentAccount account = new CurrentAccount(Branches.Oslo, 0);
             account.DepositFunds(1000m);
 
             //act
@@ -34,13 +33,13 @@ namespace Boolean.CSharp.Test
         public void RequestOverdraft()
         {
             //arrange
-            CurrentAccount account = new CurrentAccount();
-            account.CreateAccount(Branches.Oslo);
+            CurrentAccount account = new CurrentAccount(Branches.Oslo, 0);
 
 
             //act
             bool result1 = account.WithdrawFunds(499m);
             account.RequestOverdraft(500);
+            account.OverdraftRseponse(true);
             bool result2 = account.WithdrawFunds(499m);
 
 
@@ -54,17 +53,18 @@ namespace Boolean.CSharp.Test
         public void OverdraftResponse()
         {
             //arrange
-            CurrentAccount account = new CurrentAccount();
-            account.CreateAccount(Branches.Oslo);
+            CurrentAccount account = new CurrentAccount(Branches.Oslo, 0);
 
 
             //act
+            
             bool result1 = account.WithdrawFunds(499m);
             account.RequestOverdraft(500);
             account.OverdraftRseponse(false);
             bool result2 = account.WithdrawFunds(499m);
             account.OverdraftRseponse(true);
             bool result3 = account.WithdrawFunds(499m);
+
 
 
 
@@ -78,9 +78,8 @@ namespace Boolean.CSharp.Test
         [Test]
         public void SendSMS()
         {
-            SavingsAccount account = new SavingsAccount();
-            account.CreateAccount(Branches.Oslo);
-            
+            CurrentAccount account = new CurrentAccount(Branches.Oslo, 0);
+
 
             //act
             bool result = account.SendSms();

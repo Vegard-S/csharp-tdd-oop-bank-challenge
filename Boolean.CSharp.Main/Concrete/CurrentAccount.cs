@@ -10,22 +10,64 @@ namespace Boolean.CSharp.Main.Concrete
 {
     public class CurrentAccount : Accounts
     {
-        private decimal _overdraft {  get; set; }
+        public decimal _overdraft {  get; set; }
 
-        private bool _overdraftAllowed { get; set; }
+        public bool _overdraftAllowed { get; set; }
 
-        public override void CreateAccount(Branches branches)
+        public CurrentAccount(Branches bransh, decimal overdraft)
         {
-            throw new NotImplementedException();
+            _branches = bransh;
+            _overdraft = overdraft;
+        }
+
+        public override bool WithdrawFunds(decimal ammount)
+        {
+            if (CalculateBalance() > ammount)
+            {
+                Payment payment = new Payment(0, ammount);
+                _transactionHistory.Add(payment);
+                return true;
+            }
+            else if (CalculateBalance() + _overdraft > ammount && _overdraftAllowed)
+            {
+                Payment payment = new Payment(0, ammount);
+                _transactionHistory.Add(payment);
+                Console.WriteLine("you are overdrafting your account");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("you are trying to withdraw more than you have!");
+                return false;
+            }
         }
 
         public bool RequestOverdraft(decimal ammount)
         {
-            throw new NotImplementedException();
+            if (ammount >= 0)
+            {
+                _overdraft = ammount;
+                return true;
+            }
+            else 
+            { 
+                Console.WriteLine("need positiv decimal");
+                return false; 
+            }
+            
         }
         public bool OverdraftRseponse(bool answer)
         {
-            throw new NotImplementedException();
+            if (answer)
+            {
+                _overdraftAllowed = true;
+                return true;
+            }
+            else
+            {
+                _overdraftAllowed = false;
+                return false;
+            }
         }
 
     }

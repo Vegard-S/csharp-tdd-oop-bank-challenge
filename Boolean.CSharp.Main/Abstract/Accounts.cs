@@ -1,48 +1,106 @@
-﻿using Boolean.CSharp.Main.Enums;
+﻿using Boolean.CSharp.Main.Concrete;
+using Boolean.CSharp.Main.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
+
+
 
 namespace Boolean.CSharp.Main.Abstract
 {
     public abstract class Accounts
     {
-        private List<Payment> _transactionHistory = new List<Payment>();
+        private protected List<Payment> _transactionHistory = new List<Payment>();
 
-        private decimal _balance { get; set; } = Decimal.Zero;
-        public Branches _branches { get; set; }
+        
+        private protected Branches _branches { get; set; }
 
-        public virtual void CreateAccount(Branches branches)
-        {
-            throw new NotImplementedException();
-        }
         
         public string Generatebankstatement()
         {
-            throw new NotImplementedException();
+            StringBuilder stringbuilder = new StringBuilder();
+            stringbuilder.Append(string.Format("{0,10} || {1,10} || {2,10} || {3,10} \n", "Date", "Credit", "Debit", "Balance"));
+            foreach (Payment payment in _transactionHistory.OrderByDescending(t => t.Date))
+            {
+                stringbuilder.Append(string.Format("{0,10} || {1,10} || {2,10} || {3,10} ",
+                        payment.Date.ToShortDateString(),
+                        payment.Credit,
+                        payment.Debit,
+                        CalculateBalance())
+                        );
+            };
+            string result = stringbuilder.ToString();
+            return result;
         }
 
         public bool DepositFunds(decimal ammount)
         {
-            throw new NotImplementedException();
+            
+            Payment payment = new Payment(ammount, 0);
+            _transactionHistory.Add(payment);
+
+            if (payment.Credit == ammount)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public bool WithdrawFunds(decimal ammount)
+        public virtual bool WithdrawFunds(decimal ammount)
         {
-            throw new NotImplementedException();
+            if (CalculateBalance() > ammount)
+            {
+                Payment payment = new Payment(0, ammount);
+                _transactionHistory.Add(payment);
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("you are trying to withdraw more than you have!");
+                return false;
+            }
         }
 
         public decimal CalculateBalance()
         {
-            throw new NotImplementedException();
+            decimal result = 0;
+            foreach (var item in _transactionHistory)
+            {
+                if (item.Credit != 0)
+                {
+                    result += item.Credit;
+                }
+                else if (item.Debit != 0)
+                {
+                    result -= item.Debit;
+                }
+                
+            }
+            return result;
         }
 
+       
        public bool SendSms()
        {
-            throw new NotImplementedException();
+            //twillio stuff
+            //change true for if sent or something
+            if (true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
        }
 
 

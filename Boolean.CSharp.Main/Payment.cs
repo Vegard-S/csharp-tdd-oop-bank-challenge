@@ -16,6 +16,12 @@ namespace Boolean.CSharp.Main
 
         public DateTime Date { get; set; } = DateTime.Now;
 
-
+        public Payment(decimal credit, decimal debit)
+        {
+            
+            Credit = credit;
+            Debit = debit;
+            
+        }
     }
 }
